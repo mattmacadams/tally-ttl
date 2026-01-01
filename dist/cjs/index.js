@@ -25,8 +25,9 @@ class TallyTTL {
             throw new Error("id must be a non-empty string");
         }
         const ttl = this.resolveTtl(ttlSeconds);
-        const expiresAt = Date.now() + ttl * 1000;
-        this.store[id][String(expiresAt)]++;
+        const expiresAt = String(Date.now() + ttl * 1000);
+        this.store[id] = this.store[id] || {};
+        this.store[id][expiresAt] = (this.store[id][expiresAt] || 0) + 1;
     }
     increment(id) {
         this.tally(id);
@@ -37,9 +38,11 @@ class TallyTTL {
     get(id) {
         const now = Date.now();
         let count = 0;
-        for (const t of Object.keys(this.store[id])) {
-            if (Number(t) > now) {
-                count += this.store[id][t];
+        if (this.store[id]) {
+            for (const t of Object.keys(this.store[id])) {
+                if (Number(t) > now) {
+                    count += this.store[id][t] || 0;
+                }
             }
         }
         return count;
@@ -56,9 +59,11 @@ class TallyTTL {
     cleanup() {
         const now = Date.now();
         for (const id of Object.keys(this.store)) {
-            for (const t of Object.keys(this.store[id])) {
-                if (Number(t) <= now)
-                    delete this.store[id][t];
+            if (this.store[id]) {
+                for (const t of Object.keys(this.store[id])) {
+                    if (Number(t) <= now)
+                        delete this.store[id][t];
+                }
             }
         }
     }

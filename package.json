@@ -23,7 +23,7 @@
 	"type": "module",
 	"types": "./dist/esm/index.d.ts",
 	"scripts": {
-		"build:esm": "tsc",
+		"build:esm": "tsc -p tsconfig.esm.json",
 		"build:cjs": "tsc -p tsconfig.cjs.json",
 		"build": "rm -rf dist/* && npm run build:esm && npm run build:cjs",
 		"test": "echo \"Error: no test specified\" && exit 1"
