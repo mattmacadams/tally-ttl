@@ -1,0 +1,48 @@
+{
+	"name": "tally-ttl",
+	"version": "0.5.0",
+	"description": "A simple library to tally items with a configurable per-tally TTL",
+	"keywords": [
+		"tally",
+		"counter",
+		"ttl",
+		"increment",
+		"expiring",
+		"auto-expire"
+	],
+	"homepage": "https://github.com/mattmacadams/tally-ttl#readme",
+	"bugs": {
+		"url": "https://github.com/mattmacadams/tally-ttl/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mattmacadams/tally-ttl.git"
+	},
+	"license": "CC0-1.0",
+	"author": "Matt MacAdams",
+	"type": "module",
+	"types": "./dist/esm/index.d.ts",
+	"scripts": {
+		"build:esm": "tsc",
+		"build:cjs": "tsc -p tsconfig.cjs.json",
+		"build": "rm -rf dist/* && npm run build:esm && npm run build:cjs",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"exports": {
+		".": {
+			"types": "./dist/esm/index.d.ts",
+			"import": "./dist/esm/index.js",
+			"require": "./dist/cjs/index.cjs"
+		}
+	},
+	"files": [
+		"dist",
+		"README.md",
+		"LICENSE"
+	],
+	"sideEffects": false,
+	"devDependencies": {
+		"prettier": "^3.7.4",
+		"typescript": "^5.9.3"
+	}
+}
