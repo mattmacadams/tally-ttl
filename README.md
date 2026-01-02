@@ -6,6 +6,8 @@ Each tally has it's own TTL (rounded to 1 second increments).
 
 Contains both CommonJS and ESM modules for counting items. Typescript types included with ESM version.
 
+Has a built-in cleanup function to delete expired tallies.
+
 **Installation**
 
 ```
@@ -23,7 +25,7 @@ const TallyTTL = require("tally-ttl");
 ```
 
 ```javascript
-// Example: 5 minute (300 second) tally
+// Example: Set a default TTL for each tally to 5 minutes (300 seconds).  After this time the tally will expire and will not be counted.
 const userActionTally = new TallyTTL({ defaultTtl: 60 });
 
 // in this case, we want to track how many times a user has failed to login
