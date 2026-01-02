@@ -9,7 +9,6 @@
 		"removeComments": true,
 		"lib": ["es6", "dom"],
 		"rootDir": "src",
-		//"esModuleInterop": true,
 		"skipLibCheck": true
 	},
 	"include": ["src/**/*.ts"],
