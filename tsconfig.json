@@ -1,14 +1,15 @@
 {
 	"compilerOptions": {
-		"target": "es2020",
-		"module": "es2020",
-		"moduleResolution": "node",
-		"lib": ["ES2020", "DOM"],
 		"strict": true,
+		"target": "es6",
+		"module": "esnext",
+		"moduleResolution": "classic",
+		"moduleDetection": "auto",
 		"declaration": true,
-		"outDir": "dist",
+		"removeComments": true,
+		"lib": ["es6", "dom"],
 		"rootDir": "src",
-		"esModuleInterop": true,
+		//"esModuleInterop": true,
 		"skipLibCheck": true
 	},
 	"include": ["src/**/*.ts"],

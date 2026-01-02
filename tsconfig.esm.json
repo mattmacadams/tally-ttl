@@ -2,15 +2,6 @@
 	"extends": "./tsconfig.json",
 	"compilerOptions": {
 		"strict": true,
-		"outDir": "dist/esm/",
-		"declaration": true,
-		"removeComments": true,
-		"moduleDetection": "auto",
-		"declarationMap": true,
-		"emitDeclarationOnly": false,
-		"noImplicitOverride": true,
-		"noUncheckedIndexedAccess": true,
-		"exactOptionalPropertyTypes": true
-	},
-	"include": ["src"]
+		"outDir": "dist/esm/"
+	}
 }
