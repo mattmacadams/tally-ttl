@@ -25,7 +25,7 @@ const TallyTTL = require("tally-ttl");
 ```
 
 ```javascript
-// Example: Set a default TTL for each tally to 5 minutes (300 seconds).  After this time the tally will expire and will not be counted.
+// Example: Set a default TTL for each tally to 1 minute (60 seconds).  After this time the tally will expire and will not be counted.
 const userActionTally = new TallyTTL({ defaultTtl: 60 });
 
 // in this case, we want to track how many times a user has failed to login
@@ -58,6 +58,6 @@ bobLoginFailedCount = userActionTally.get("bob-login-failed");
 
 ```javascript
 // You can also overriude the defaultTtl for an induvidual tally
-// Example: this particular tally would persisit for 15 minutes (900 seconds)
-userActionTally.tally("bob-login-failed", 3600);
+// Example: this particular tally would persisit for 15 minutes (900 seconds). When the second argument is unspecified, the defaultTtl is used
+userActionTally.tally("bob-login-failed", 900);
 ```
