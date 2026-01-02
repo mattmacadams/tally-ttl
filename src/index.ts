@@ -43,7 +43,7 @@ export class TallyTTL {
 	 * @param ttlSeconds Optional per-call TTL in seconds. Overrides constructor default when provided.
 	 * @returns The count after incrementing.
 	 */
-	tally(id: string, ttlSeconds?: number) {
+	tally(id: string, ttlSeconds?: number): void {
 		if (typeof id !== "string" || id.length === 0) {
 			throw new Error("id must be a non-empty string");
 		}
@@ -55,7 +55,7 @@ export class TallyTTL {
 	}
 
 	increment(id: string) {
-		this.tally(id);
+		return this.tally(id);
 	}
 
 	/**
@@ -73,6 +73,10 @@ export class TallyTTL {
 		}
 
 		return count;
+	}
+
+	count(id: string): number {
+		return this.get(id);
 	}
 
 	/**
