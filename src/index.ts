@@ -7,25 +7,34 @@ export type TallyTTLConfig = {
  * TallyTTL counts induvidual tallies per given ID with a time-to-live on a per-tally basis.
  */
 export class TallyTTL {
-	private readonly defaultTtl: number;
+	private defaultTtl: number = 60;
+	private cleanupSeconds: number = 90;
 	private store: {
 		[key: string]: {
 			[key: string]: number;
 		};
 	} = {};
 
-	cleanupInterval: ReturnType<typeof setInterval>;
+	private cleanupInterval: ReturnType<typeof setInterval>;
 
 	constructor(config: TallyTTLConfig = {}) {
-		const { defaultTtl = 60, cleanupSeconds = 120000 } = config;
-		if (!Number.isFinite(defaultTtl) || defaultTtl <= 0) {
-			throw new Error("defaultTtlSeconds must be a positive finite number");
+		if (config.defaultTtl) {
+			if (!Number.isFinite(config.defaultTtl) || !config.defaultTtl || config.defaultTtl <= 0) {
+				throw new Error("When provided, defaultTtlSeconds must be a positive finite number");
+			}
+			this.defaultTtl = config.defaultTtl;
 		}
 
-		this.defaultTtl = defaultTtl;
-		this.store = {};
+		if (config.cleanupSeconds) {
+			if (!Number.isFinite(config.cleanupSeconds) || config.cleanupSeconds < 1) {
+				throw new Error("When provided, cleanupSeconds must be a positive finite number");
+			}
+			this.cleanupSeconds = config.cleanupSeconds;
+		}
 
-		this.cleanupInterval = setInterval(this.cleanup, cleanupSeconds * 1000);
+		this.cleanupInterval = setInterval(() => {
+			this.cleanup();
+		}, this.cleanupSeconds * 1000);
 	}
 
 	/**
@@ -77,6 +86,8 @@ export class TallyTTL {
 	 * Remove all expired entries. This is optional; entries are lazily reset on access.
 	 */
 	cleanup(): void {
+		console.dir("---- CLEANUP");
+		console.dir(this.store);
 		const now = Date.now();
 		if (this.store) {
 			for (const id of Object.keys(this.store)) {
