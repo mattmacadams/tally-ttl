@@ -8,7 +8,7 @@ export type TallyTTLConfig = {
  */
 export class TallyTTL {
 	private defaultTtl: number = 60;
-	private cleanupSeconds: number = 90;
+	private cleanupSeconds: number = 60;
 	private store: {
 		[key: string]: {
 			[key: string]: number;
@@ -49,7 +49,7 @@ export class TallyTTL {
 		}
 
 		const ttl = this.resolveTtl(ttlSeconds);
-		const expiresAt = String(Date.now() + ttl * 1000);
+		const expiresAt = String(this.now() + ttl);
 		this.store[id] = this.store[id] || {};
 		this.store[id][expiresAt] = (this.store[id][expiresAt] || 0) + 1;
 	}
@@ -62,7 +62,7 @@ export class TallyTTL {
 	 * Get the current count without mutating. Returns 0 if missing or expired.
 	 */
 	get(id: string): number {
-		const now = Date.now();
+		const now = this.now();
 		let count = 0;
 		if (this.store[id]) {
 			for (const t of Object.keys(this.store[id])) {
@@ -86,18 +86,20 @@ export class TallyTTL {
 	 * Remove all expired entries. This is optional; entries are lazily reset on access.
 	 */
 	cleanup(): void {
-		console.dir("---- CLEANUP");
-		console.dir(this.store);
-		const now = Date.now();
+		const now = this.now();
 		if (this.store) {
 			for (const id of Object.keys(this.store)) {
 				if (this.store[id]) {
-					for (const t of Object.keys(this.store[id])) {
-						if (Number(t) <= now) delete this.store[id][t];
+					for (const key of Object.keys(this.store[id])) {
+						if (Number(key) <= now) delete this.store[id][key];
 					}
 				}
 			}
 		}
+	}
+
+	private now(): number {
+		return Math.floor(Date.now() / 1000);
 	}
 
 	private resolveTtl(ttlSeconds?: number): number {
