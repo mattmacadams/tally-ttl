@@ -12,9 +12,9 @@ export class TallyTTL {
 		[key: string]: {
 			[key: string]: number;
 		};
-	};
+	} = {};
 
-	cleanupInterval = 0;
+	cleanupInterval: ReturnType<typeof setInterval>;
 
 	constructor(config: TallyTTLConfig = {}) {
 		const { defaultTtl = 60, cleanupSeconds = 120000 } = config;
@@ -25,9 +25,7 @@ export class TallyTTL {
 		this.defaultTtl = defaultTtl;
 		this.store = {};
 
-		setTimeout(() => {
-			this.cleanupInterval = setInterval(this.cleanup, cleanupSeconds);
-		}, cleanupSeconds);
+		this.cleanupInterval = setInterval(this.cleanup, cleanupSeconds * 1000);
 	}
 
 	/**
@@ -80,10 +78,12 @@ export class TallyTTL {
 	 */
 	cleanup(): void {
 		const now = Date.now();
-		for (const id of Object.keys(this.store)) {
-			if (this.store[id]) {
-				for (const t of Object.keys(this.store[id])) {
-					if (Number(t) <= now) delete this.store[id][t];
+		if (this.store) {
+			for (const id of Object.keys(this.store)) {
+				if (this.store[id]) {
+					for (const t of Object.keys(this.store[id])) {
+						if (Number(t) <= now) delete this.store[id][t];
+					}
 				}
 			}
 		}
