@@ -8,13 +8,13 @@ export type TallyTTLConfig = {
  */
 export class TallyTTL {
 	private readonly defaultTtl: number;
-	private readonly store: {
+	private store: {
 		[key: string]: {
 			[key: string]: number;
 		};
-	} = {};
+	};
 
-	cleanupInterval: number;
+	cleanupInterval = 0;
 
 	constructor(config: TallyTTLConfig = {}) {
 		const { defaultTtl = 60, cleanupSeconds = 120000 } = config;
@@ -23,7 +23,11 @@ export class TallyTTL {
 		}
 
 		this.defaultTtl = defaultTtl;
-		this.cleanupInterval = setInterval(this.cleanup, cleanupSeconds);
+		this.store = {};
+
+		setTimeout(() => {
+			this.cleanupInterval = setInterval(this.cleanup, cleanupSeconds);
+		}, cleanupSeconds);
 	}
 
 	/**
