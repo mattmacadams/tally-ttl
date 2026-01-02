@@ -1,27 +1,38 @@
 export class TallyTTL {
     constructor(config = {}) {
+        this.defaultTtl = 60;
+        this.cleanupSeconds = 60;
         this.store = {};
-        const { defaultTtl = 60, cleanupSeconds = 120000 } = config;
-        if (!Number.isFinite(defaultTtl) || defaultTtl <= 0) {
-            throw new Error("defaultTtlSeconds must be a positive finite number");
+        if (config.defaultTtl) {
+            if (!Number.isFinite(config.defaultTtl) || !config.defaultTtl || config.defaultTtl <= 0) {
+                throw new Error("When provided, defaultTtlSeconds must be a positive finite number");
+            }
+            this.defaultTtl = config.defaultTtl;
         }
-        this.defaultTtl = defaultTtl;
-        this.cleanupInterval = setInterval(this.cleanup, cleanupSeconds);
+        if (config.cleanupSeconds) {
+            if (!Number.isFinite(config.cleanupSeconds) || config.cleanupSeconds < 1) {
+                throw new Error("When provided, cleanupSeconds must be a positive finite number");
+            }
+            this.cleanupSeconds = config.cleanupSeconds;
+        }
+        this.cleanupInterval = setInterval(() => {
+            this.cleanup();
+        }, this.cleanupSeconds * 1000);
     }
     tally(id, ttlSeconds) {
         if (typeof id !== "string" || id.length === 0) {
             throw new Error("id must be a non-empty string");
         }
         const ttl = this.resolveTtl(ttlSeconds);
-        const expiresAt = String(Date.now() + ttl * 1000);
+        const expiresAt = String(this.now() + ttl);
         this.store[id] = this.store[id] || {};
         this.store[id][expiresAt] = (this.store[id][expiresAt] || 0) + 1;
     }
     increment(id) {
-        this.tally(id);
+        return this.tally(id);
     }
     get(id) {
-        const now = Date.now();
+        const now = this.now();
         let count = 0;
         if (this.store[id]) {
             for (const t of Object.keys(this.store[id])) {
@@ -32,19 +43,27 @@ export class TallyTTL {
         }
         return count;
     }
+    count(id) {
+        return this.get(id);
+    }
     clear(id) {
         delete this.store[id];
     }
     cleanup() {
-        const now = Date.now();
-        for (const id of Object.keys(this.store)) {
-            if (this.store[id]) {
-                for (const t of Object.keys(this.store[id])) {
-                    if (Number(t) <= now)
-                        delete this.store[id][t];
+        const now = this.now();
+        if (this.store) {
+            for (const id of Object.keys(this.store)) {
+                if (this.store[id]) {
+                    for (const key of Object.keys(this.store[id])) {
+                        if (Number(key) <= now)
+                            delete this.store[id][key];
+                    }
                 }
             }
         }
+    }
+    now() {
+        return Math.floor(Date.now() / 1000);
     }
     resolveTtl(ttlSeconds) {
         if (ttlSeconds === undefined)
