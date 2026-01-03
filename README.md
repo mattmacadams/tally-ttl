@@ -1,6 +1,6 @@
 ## Simple tally tracker with individual TTL per tally (sliding window tally)
 
-Useful for tracking how many events have occured in a recent window of time.
+Useful for tracking how many events have occurred in a recent window of time.
 
 Each tally has it's own TTL (rounded to 1 second increments).
 
