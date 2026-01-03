@@ -1,4 +1,4 @@
-## Simple tally tracker with induvidual TTL per tally (sliding window tally)
+## Simple tally tracker with individual TTL per tally (sliding window tally)
 
 Useful for tracking how many events have occured in a recent window of time.
 
@@ -57,7 +57,7 @@ bobLoginFailedCount = userActionTally.get("bob-login-failed");
 ```
 
 ```javascript
-// You can also overriude the defaultTtl for an induvidual tally
+// You can also overriude the defaultTtl for an individual tally
 // Example: this particular tally would persisit for 15 minutes (900 seconds). When the second argument is unspecified, the defaultTtl is used
 userActionTally.tally("bob-login-failed", 900);
 ```
