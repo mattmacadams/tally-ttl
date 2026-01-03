@@ -2,11 +2,13 @@
 
 Useful for tracking how many events have occurred in a recent window of time.
 
-Each tally has it's own TTL (rounded to 1 second increments).
+Each tally has it's own TTL (Time-to-Live, aka expiration), rounded to 1 second increments.
 
-Contains both CommonJS and ESM modules for counting items. Typescript types included with ESM version.
+Contains both CommonJS and ESM modules for counting items.
 
-Has a built-in cleanup function to delete expired tallies.
+Typescript types included
+
+There is a built-in cleanup function to delete expired tallies. By default it runs every 60 seconds, but can be configured to run at any interval `new TallyTTL({ cleanupSeconds: 900 })`. Setting a long or shorter cleanup period does not affect the results. A shorter clean up window could slightly improve performance in some cases. If you want to specify this, try starting with something close to the defaultTtl value.
 
 **Installation**
 
@@ -38,7 +40,7 @@ userActionTally.tally("bob-login-failed");
 let bobLoginFailedCount = userActionTally.get("bob-login-failed");
 // bobLoginFailedCount would be 2
 
-// wait a second...
+// wait 1 second or more...
 
 /*
 Each call to tally() gets it's own expiration time, so calling it again here would
@@ -50,10 +52,10 @@ userActionTally.tally("bob-login-failed");
 bobLoginFailedCount = userActionTally.get("bob-login-failed");
 // bobLoginFailedCount would be 3
 
-// wait 60 seconds...
+// wait 60 seconds (which is the defaultTtl)...
 
 bobLoginFailedCount = userActionTally.get("bob-login-failed");
-// bobLoginFailedCount would be 1 since the first two have expired by now
+// bobLoginFailedCount would be 1 since the first two have already expired
 
 // wait a second...
 
