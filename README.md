@@ -4,7 +4,7 @@ Useful for tracking how many events have occurred in a recent window of time, su
 
 Each individual tally has its own TTL (Time-to-Live, aka expiration), rounded to 1 second increments. In other words, we're not just counting tallies - we're tracking when they occurred so we can expire each tally individually.
 
-Contains both CommonJS and ESM modules. Written in Typescript, with types included.
+Contains both CommonJS and ESM modules. Source was written in Typescript, with types included.
 
 There is a built-in cleanup function to delete expired tallies. By default it runs every 60 seconds, which should be suitable for most use cases. If you have a reason to change the interval, simply add an arg to the config: `new TallyTTL({ cleanupSeconds: 900 })`. Setting a long or shorter cleanup period does not affect the results. A shorter clean up window could slightly improve counting performance in some cases by removing expired items from memory more quickly. If you want to specify this, try starting with something close to the defaultTtl value.
 
