@@ -1,0 +1,18 @@
+#!/bin/sh
+
+rm -fr dist/* || exit 1;
+
+(npm run build);
+
+# git diff --exit-code dist/*
+
+if [ -n "$(git diff dist/*)" ]; then
+	if [ /usr/bin/osascript ]; then
+		/usr/bin/osascript <<-EOF
+			tell application "System Events"
+				activate
+				display dialog "Warning: The dist directory has uncommitted file changes"
+			end tell
+		EOF
+	fi
+fi
