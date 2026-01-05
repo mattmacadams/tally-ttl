@@ -1,6 +1,6 @@
 {
 	"name": "tally-ttl",
-	"version": "0.5.9",
+	"version": "0.5.11",
 	"description": "A simple library to tally items with a configurable per-tally TTL",
 	"keywords": [
 		"tally",
