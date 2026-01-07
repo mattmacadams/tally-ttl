@@ -1,6 +1,6 @@
 export type TallyTTLConfig = {
 	defaultTtl?: number; // default TTL for new tallies (in seconds)
-	cleanupSeconds?: number; // frequency of internal cleanup (in seconds). Note this is just for memory optimzation and does not affect results
+	cleanupSeconds?: number; // frequency of internal cleanup (in seconds, minimum 5). Note this is just for memory optimzation and does not affect results
 };
 
 /**
@@ -19,17 +19,17 @@ export class TallyTTL {
 
 	constructor(config: TallyTTLConfig = {}) {
 		if (config.defaultTtl) {
-			if (!Number.isFinite(config.defaultTtl) || !config.defaultTtl || config.defaultTtl <= 0) {
-				throw new Error("When provided, defaultTtlSeconds must be a positive finite number");
+			if (!Number.isInteger(config.defaultTtl) || !config.defaultTtl || config.defaultTtl < 5) {
+				throw new Error("When provided, defaultTtl must be greater than 0");
 			}
-			this.defaultTtl = config.defaultTtl;
+			this.defaultTtl = config.defaultTtl + 0;
 		}
 
 		if (config.cleanupSeconds) {
 			if (!Number.isFinite(config.cleanupSeconds) || config.cleanupSeconds < 1) {
 				throw new Error("When provided, cleanupSeconds must be a positive finite number");
 			}
-			this.cleanupSeconds = config.cleanupSeconds;
+			this.cleanupSeconds = config.cleanupSeconds + 0;
 		}
 
 		this.cleanupInterval = setInterval(() => {
