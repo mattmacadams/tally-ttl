@@ -29,34 +29,35 @@ const TallyTTL = require("tally-ttl");
 
 ```javascript
 /*
-Example: Set a default TTL for each tally to 1 minute (60 seconds).
-After 60 seconds the each tally will expire.
+Example: Set defaultTtl to set the default TTL for each tally. After 300 seconds the each tally will expire.
 */
-const userActionTally = new TallyTTL({ defaultTtl: 60 });
+const userActionTally = new TallyTTL({ defaultTtl: 300 });
 
 // in this case, we want to track how many times a user has failed to login
-userActionTally.tally("bob-login-failed");
-userActionTally.tally("bob-login-failed");
-// wait 10 seconds
-userActionTally.tally("bob-login-failed");
+userActionTally.tally("user1234-login-failed");
+userActionTally.tally("user1234-login-failed");
+// wait 30 seconds
+userActionTally.tally("user1234-login-failed");
 
-let bobLoginFailedCount = userActionTally.get("bob-login-failed");
-// bobLoginFailedCount would be 3
+let bobLoginFailedCount = userActionTally.get("user1234-login-failed");
+// bobLoginFailedCount would now be 3
 
-// wait 50 seconds for the first two tallies to expire...
+// wait 300 seconds for the first two tallies to expire...
 
-bobLoginFailedCount = userActionTally.get("bob-login-failed");
-// bobLoginFailedCount would be 1
+bobLoginFailedCount = userActionTally.get("user1234-login-failed");
+// bobLoginFailedCount would now be 1
 
-// wait 10 seconds for the last tally to expire...
+// wait 30 seconds for that last tally to expire...
 
-bobLoginFailedCount = userActionTally.get("bob-login-failed");
+bobLoginFailedCount = userActionTally.get("user1234-login-failed");
 // bobLoginFailedCount would be 0
 ```
 
 ```javascript
-// You can also override the defaultTtl for an individual tally
+/*
+You can also override the defaultTtl for an individual tally.
+*/
 
-// Example: this particular tally would persisit for 15 minutes (900 seconds).
+// Example: this particular tally would persisit for 15 minutes (900 seconds) rather than the value of defaultTtl.
 userActionTally.tally("bob-login-failed", 900);
 ```
