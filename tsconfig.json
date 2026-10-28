@@ -2,8 +2,8 @@
 	"compilerOptions": {
 		"strict": true,
 		"target": "es6",
-		"module": "esnext",
-		"moduleResolution": "classic",
+		"module": "preserve",
+		"moduleResolution": "bundler",
 		"moduleDetection": "auto",
 		"declaration": true,
 		"removeComments": true,
